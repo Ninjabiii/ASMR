@@ -2,57 +2,99 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ASMR Soundbox</title>
+  <title>ASMR Mixer</title>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: #1e1e2f;
-      color: #fff;
+      background: #1b1b2f;
+      color: #eee;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
     }
-    .soundbox {
-      display: grid;
-      grid-template-columns: repeat(2, 150px);
-      gap: 20px;
+    h1 {
+      margin-bottom: 20px;
+    }
+    .track {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      background: #2e2e4f;
+      padding: 12px 20px;
+      border-radius: 12px;
+      width: 300px;
+      justify-content: space-between;
+    }
+    .track label {
+      flex: 1;
+      font-size: 16px;
+    }
+    .track input[type="range"] {
+      flex: 2;
+      margin-left: 15px;
     }
     button {
-      background: #2e2e4f;
+      margin-top: 20px;
+      padding: 10px 20px;
       border: none;
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 8px;
+      background: #44446a;
       color: #fff;
-      font-size: 16px;
       cursor: pointer;
-      transition: 0.3s;
     }
     button:hover {
-      background: #44446a;
+      background: #5a5a8a;
     }
   </style>
 </head>
 <body>
-  <h1>🌙 ASMR Soundbox</h1>
-  <div class="soundbox">
-    <button onclick="playSound('rain')">🌧 Rain</button>
-    <button onclick="playSound('thunder')">⚡ Thunder</button>
-    <button onclick="playSound('coffee')">☕ Coffee</button>
-    <button onclick="playSound('birds')">🐦 Birds</button>
+  <h1>🌙 ASMR Mixer</h1>
+
+  <div class="track">
+    <label>🌧 Rain</label>
+    <input type="range" min="0" max="1" step="0.01" value="0" oninput="setVolume('rain', this.value)">
+  </div>
+  <div class="track">
+    <label>⚡ Thunder</label>
+    <input type="range" min="0" max="1" step="0.01" value="0" oninput="setVolume('thunder', this.value)">
+  </div>
+  <div class="track">
+    <label>☕ Coffee</label>
+    <input type="range" min="0" max="1" step="0.01" value="0" oninput="setVolume('coffee', this.value)">
+  </div>
+  <div class="track">
+    <label>🐦 Birds</label>
+    <input type="range" min="0" max="1" step="0.01" value="0" oninput="setVolume('birds', this.value)">
   </div>
 
-  <audio id="rain" src="sounds/rain.mp3"></audio>
-  <audio id="thunder" src="sounds/thunder.mp3"></audio>
-  <audio id="coffee" src="sounds/coffee.mp3"></audio>
-  <audio id="birds" src="sounds/birds.mp3"></audio>
+  <button onclick="stopAll()">⏹ Stop All</button>
+
+  <audio id="rain" src="sounds/rain.mp3" loop></audio>
+  <audio id="thunder" src="sounds/thunder.mp3" loop></audio>
+  <audio id="coffee" src="sounds/coffee.mp3" loop></audio>
+  <audio id="birds" src="sounds/birds.mp3" loop></audio>
 
   <script>
-    function playSound(id) {
+    function setVolume(id, volume) {
       const audio = document.getElementById(id);
-      audio.currentTime = 0;
-      audio.play();
+      audio.volume = volume;
+      if (volume > 0 && audio.paused) {
+        audio.play();
+      }
+      if (volume == 0) {
+        audio.pause();
+      }
+    }
+    function stopAll() {
+      ['rain','thunder','coffee','birds'].forEach(id => {
+        const audio = document.getElementById(id);
+        audio.pause();
+        audio.currentTime = 0;
+        audio.volume = 0;
+      });
+      document.querySelectorAll('input[type="range"]').forEach(slider => slider.value = 0);
     }
   </script>
 </body>
