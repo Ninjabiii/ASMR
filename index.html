@@ -5,95 +5,77 @@
   <title>ASMR Mixer</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: #1b1b2f;
-      color: #eee;
+      font-family: serif;
+      font-size: 13px;
+      background: #4B0002;
+      color: #fff;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      margin: 0;
     }
-    h1 {
-      margin-bottom: 20px;
-    }
-    .track {
+
+    .soundbox {
+      background: rgba(255, 255, 255, 0.1); /* opaque rectangle */
+      padding: 30px;
+      border-radius: 16px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      margin: 10px 0;
-      background: #2e2e4f;
-      padding: 12px 20px;
-      border-radius: 12px;
-      width: 300px;
-      justify-content: space-between;
+      gap: 20px;
     }
-    .track label {
-      flex: 1;
-      font-size: 16px;
-    }
-    .track input[type="range"] {
-      flex: 2;
-      margin-left: 15px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #44446a;
-      color: #fff;
+
+    .icons {
+      display: flex;
+      gap: 25px;
+      font-size: 28px;
       cursor: pointer;
     }
-    button:hover {
-      background: #5a5a8a;
+
+    audio {
+      display: none; /* hidden by default */
+      margin-top: 10px;
+      width: 250px;
+    }
+
+    audio.show {
+      display: block; /* visible only when playing */
     }
   </style>
 </head>
 <body>
-  <h1>🌙 ASMR Mixer</h1>
+  <div class="soundbox">
+    <div class="icons">
+      <span onclick="toggleSound('rain')">🌧</span>
+      <span onclick="toggleSound('thunder')">⚡</span>
+      <span onclick="toggleSound('coffee')">☕</span>
+      <span onclick="toggleSound('birds')">🐦</span>
+    </div>
 
-  <div class="track">
-    <label>🌧 Rain</label>
-    <input type="range" min="0" max="1" step="0.01" value="0" oninput="setVolume('rain', this.value)">
+    <audio id="rain" src="sounds/rain.mp3" controls loop></audio>
+    <audio id="thunder" src="sounds/thunder.mp3" controls loop></audio>
+    <audio id="coffee" src="sounds/coffee.mp3" controls loop></audio>
+    <audio id="birds" src="sounds/birds.mp3" controls loop></audio>
   </div>
-  <div class="track">
-    <label>⚡ Thunder</label>
-    <input type="range" min="0" max="1" step="0.01" value="0" oninput="setVolume('thunder', this.value)">
-  </div>
-  <div class="track">
-    <label>☕ Coffee</label>
-    <input type="range" min="0" max="1" step="0.01" value="0" oninput="setVolume('coffee', this.value)">
-  </div>
-  <div class="track">
-    <label>🐦 Birds</label>
-    <input type="range" min="0" max="1" step="0.01" value="0" oninput="setVolume('birds', this.value)">
-  </div>
-
-  <button onclick="stopAll()">⏹ Stop All</button>
-  <audio id="rain" src="audio/rain.mp3" loop></audio>
-  <audio id="thunder" src="sounds/thunder.mp3" loop></audio>
-  <audio id="coffee" src="sounds/coffee.mp3" loop></audio>
-  <audio id="birds" src="sounds/birds.mp3" loop></audio>
 
   <script>
-    function setVolume(id, volume) {
+    function toggleSound(id) {
       const audio = document.getElementById(id);
-      audio.volume = volume;
-      if (volume > 0 && audio.paused) {
+
+      if (audio.paused) {
+        // Pause all others first
+        document.querySelectorAll('audio').forEach(a => {
+          a.pause();
+          a.classList.remove('show');
+        });
+        // Play this one
         audio.play();
-      }
-      if (volume == 0) {
+        audio.classList.add('show');
+      } else {
         audio.pause();
+        audio.classList.remove('show');
       }
-    }
-    function stopAll() {
-      ['rain','thunder','coffee','birds'].forEach(id => {
-        const audio = document.getElementById(id);
-        audio.pause();
-        audio.currentTime = 0;
-        audio.volume = 0;
-      });
-      document.querySelectorAll('input[type="range"]').forEach(slider => slider.value = 0);
     }
   </script>
 </body>
