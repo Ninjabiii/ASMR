@@ -1,47 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>ASMR Soundbox</title>
-<style>
-  body {
-    background: #1e1e2f;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    padding: 20px;
-    font-family: 'Helvetica', sans-serif;
-  }
-  button {
-    background: #2b2b3f;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    padding: 15px 25px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: 0.3s;
-  }
-  button:hover {
-    background: #44445c;
-    transform: scale(1.05);
-  }
-</style>
+  <meta charset="UTF-8">
+  <title>ASMR Soundbox</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #1e1e2f;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .soundbox {
+      display: grid;
+      grid-template-columns: repeat(2, 150px);
+      gap: 20px;
+    }
+    button {
+      background: #2e2e4f;
+      border: none;
+      border-radius: 12px;
+      padding: 20px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #44446a;
+    }
+  </style>
 </head>
 <body>
+  <h1>🌙 ASMR Soundbox</h1>
+  <div class="soundbox">
+    <button onclick="playSound('rain')">🌧 Rain</button>
+    <button onclick="playSound('thunder')">⚡ Thunder</button>
+    <button onclick="playSound('coffee')">☕ Coffee</button>
+    <button onclick="playSound('birds')">🐦 Birds</button>
+  </div>
 
-<button onclick="document.getElementById('rain').play()">Rain</button>
-<button onclick="document.getElementById('thunder').play()">Thunder</button>
-<button onclick="document.getElementById('coffee').play()">Coffee Brewing</button>
-<button onclick="document.getElementById('birds').play()">Leaves & Birds</button>
-<button onclick="document.getElementById('wind').play()">Dry Grass Wind</button>
+  <audio id="rain" src="sounds/rain.mp3"></audio>
+  <audio id="thunder" src="sounds/thunder.mp3"></audio>
+  <audio id="coffee" src="sounds/coffee.mp3"></audio>
+  <audio id="birds" src="sounds/birds.mp3"></audio>
 
-<audio id="rain" src="YOUR_RAIN_URL_HERE"></audio>
-<audio id="thunder" src="YOUR_THUNDER_URL_HERE"></audio>
-<audio id="coffee" src="YOUR_COFFEE_URL_HERE"></audio>
-<audio id="birds" src="YOUR_BIRDS_URL_HERE"></audio>
-<audio id="wind" src="YOUR_WIND_URL_HERE"></audio>
-
+  <script>
+    function playSound(id) {
+      const audio = document.getElementById(id);
+      audio.currentTime = 0;
+      audio.play();
+    }
+  </script>
 </body>
 </html>
