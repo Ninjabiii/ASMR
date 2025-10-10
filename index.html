@@ -17,7 +17,7 @@
     }
 
     .soundbox {
-      background: rgba(255, 255, 255, 0.1); /* opaque rectangle */
+      background: rgba(255, 255, 255, 0.1);
       padding: 30px;
       border-radius: 16px;
       display: flex;
@@ -81,24 +81,32 @@
     }
 
     audio {
-      display: none; /* keep audio elements hidden */
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="soundbox">
     <div class="icons">
-      <div class="icon" onclick="toggleSound('rain', this)">🌧<span>Pitter Patter</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="1" oninput="setVolume('rain', this.value)">
+      <div class="icon" onclick="toggleSound('rain', this)">
+        🌧<span>Pitter Patter</span>
+        <input type="range" class="volume" min="0" max="1" step="0.01" value="1"
+               oninput="setVolume('rain', this.value, event)">
       </div>
-      <div class="icon" onclick="toggleSound('thunder', this)">⚡<span>Rumble</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="1" oninput="setVolume('thunder', this.value)">
+      <div class="icon" onclick="toggleSound('thunder', this)">
+        ⚡<span>Rumble</span>
+        <input type="range" class="volume" min="0" max="1" step="0.01" value="1"
+               oninput="setVolume('thunder', this.value, event)">
       </div>
-      <div class="icon" onclick="toggleSound('coffee', this)">☕<span>Brew Time</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="1" oninput="setVolume('coffee', this.value)">
+      <div class="icon" onclick="toggleSound('coffee', this)">
+        ☕<span>Brew Time</span>
+        <input type="range" class="volume" min="0" max="1" step="0.01" value="1"
+               oninput="setVolume('coffee', this.value, event)">
       </div>
-      <div class="icon" onclick="toggleSound('birds', this)">🐦<span>Chirpy</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="1" oninput="setVolume('birds', this.value)">
+      <div class="icon" onclick="toggleSound('birds', this)">
+        🐦<span>Chirpy</span>
+        <input type="range" class="volume" min="0" max="1" step="0.01" value="1"
+               oninput="setVolume('birds', this.value, event)">
       </div>
     </div>
 
@@ -127,7 +135,8 @@
       }
     }
 
-    function setVolume(id, value) {
+    function setVolume(id, value, event) {
+      event.stopPropagation(); // prevents slider click from toggling sound
       const audio = document.getElementById(id);
       audio.volume = value;
     }
