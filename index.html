@@ -66,79 +66,40 @@
       background: #ffcccc;
     }
 
-    .volume {
-      display: none;
-      margin-top: 10px;
-      width: 200px;
-    }
-
-    .volume.show {
-      display: block;
-    }
-
-    input[type="range"] {
-      width: 100%;
-    }
-
     audio {
-      display: none;
+      display: none; /* keep audio elements hidden */
     }
   </style>
 </head>
 <body>
   <div class="soundbox">
     <div class="icons">
-      <div class="icon" onclick="toggleSound('rain', this)">
-        🌧<span>Pitter Patter</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="1"
-               oninput="setVolume('rain', this.value, event)">
-      </div>
-      <div class="icon" onclick="toggleSound('thunder', this)">
-        ⚡<span>Rumble</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="1"
-               oninput="setVolume('thunder', this.value, event)">
-      </div>
-      <div class="icon" onclick="toggleSound('coffee', this)">
-        ☕<span>Brew Time</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="1"
-               oninput="setVolume('coffee', this.value, event)">
-      </div>
-      <div class="icon" onclick="toggleSound('birds', this)">
-        🐦<span>Chirpy</span>
-        <input type="range" class="volume" min="0" max="1" step="0.01" value="1"
-               oninput="setVolume('birds', this.value, event)">
-      </div>
+      <div class="icon" onclick="toggleSound('rain', this)">🌧<span>Pitter Patter</span></div>
+      <div class="icon" onclick="toggleSound('thunder', this)">⚡<span>Rumble</span></div>
+      <div class="icon" onclick="toggleSound('coffee', this)">☕<span>Brew Time</span></div>
+      <div class="icon" onclick="toggleSound('birds', this)">🐦<span>Chirpy</span></div>
     </div>
 
     <button onclick="stopAll()">shh</button>
 
-    <audio id="rain" src="audio/rain.mp3" loop></audio>
+    <audio id="rain" src="aydio/rain.mp3" loop></audio>
     <audio id="thunder" src="sounds/thunder.mp3" loop></audio>
     <audio id="coffee" src="sounds/coffee.mp3" loop></audio>
-    <audio id="birds" src="sounds/birds.mp3" loop></audio>
+    <audio id="birds" src="audio/birds.mp3" loop></audio>
   </div>
 
   <script>
     function toggleSound(id, el) {
       const audio = document.getElementById(id);
-      const volumeSlider = el.querySelector('.volume');
 
       if (audio.paused) {
         audio.play();
         el.classList.add('active');
-        volumeSlider.classList.add('show');
       } else {
         audio.pause();
         audio.currentTime = 0;
         el.classList.remove('active');
-        volumeSlider.classList.remove('show');
       }
-    }
-
-    function setVolume(id, value, event) {
-      event.stopPropagation(); // prevents slider click from toggling sound
-      const audio = document.getElementById(id);
-      audio.volume = value;
     }
 
     function stopAll() {
@@ -148,7 +109,6 @@
       });
       document.querySelectorAll('.icon').forEach(icon => {
         icon.classList.remove('active');
-        icon.querySelector('.volume').classList.remove('show');
       });
     }
   </script>
