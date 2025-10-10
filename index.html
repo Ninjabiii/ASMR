@@ -23,59 +23,92 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 25px;
     }
 
     .icons {
       display: flex;
-      gap: 25px;
-      font-size: 28px;
+      gap: 35px;
+      font-size: 32px;
       cursor: pointer;
     }
 
-    audio {
-      display: none; /* hidden by default */
-      margin-top: 10px;
-      width: 250px;
+    .icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: 0.3s;
     }
 
-    audio.show {
-      display: block; /* visible only when playing */
+    .icon span {
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .icon.active {
+      text-shadow: 0 0 10px #fff, 0 0 20px #ffcccc;
+      transform: scale(1.1);
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: #4B0002;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ffcccc;
+    }
+
+    audio {
+      display: none; /* fully hidden, no scrollers */
     }
   </style>
 </head>
 <body>
   <div class="soundbox">
     <div class="icons">
-      <span onclick="toggleSound('rain')">🌧</span>
-      <span onclick="toggleSound('thunder')">⚡</span>
-      <span onclick="toggleSound('coffee')">☕</span>
-      <span onclick="toggleSound('birds')">🐦</span>
+      <div class="icon" onclick="toggleSound('rain', this)">🌧<span>Pitter Patter</span></div>
+      <div class="icon" onclick="toggleSound('thunder', this)">⚡<span>Rumble</span></div>
+      <div class="icon" onclick="toggleSound('coffee', this)">☕<span>Brew Time</span></div>
+      <div class="icon" onclick="toggleSound('birds', this)">🐦<span>Chirpy</span></div>
     </div>
 
-    <audio id="rain" src="sounds/rain.mp3" controls loop></audio>
-    <audio id="thunder" src="sounds/thunder.mp3" controls loop></audio>
-    <audio id="coffee" src="sounds/coffee.mp3" controls loop></audio>
-    <audio id="birds" src="sounds/birds.mp3" controls loop></audio>
+    <button onclick="stopAll()">shh</button>
+
+    <audio id="rain" src="sounds/rain.mp3" loop></audio>
+    <audio id="thunder" src="sounds/thunder.mp3" loop></audio>
+    <audio id="coffee" src="sounds/coffee.mp3" loop></audio>
+    <audio id="birds" src="sounds/birds.mp3" loop></audio>
   </div>
 
   <script>
-    function toggleSound(id) {
+    function toggleSound(id, el) {
       const audio = document.getElementById(id);
 
       if (audio.paused) {
-        // Pause all others first
-        document.querySelectorAll('audio').forEach(a => {
-          a.pause();
-          a.classList.remove('show');
-        });
-        // Play this one
         audio.play();
-        audio.classList.add('show');
+        el.classList.add('active');
       } else {
         audio.pause();
-        audio.classList.remove('show');
+        el.classList.remove('active');
       }
+    }
+
+    function stopAll() {
+      document.querySelectorAll('audio').forEach(a => {
+        a.pause();
+        a.currentTime = 0;
+      });
+      document.querySelectorAll('.icon').forEach(icon => {
+        icon.classList.remove('active');
+      });
     }
   </script>
 </body>
