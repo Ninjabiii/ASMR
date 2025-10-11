@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: serif;
-      font-size: 13px;
+      font-size: 12px;
       background: #4B0002;
       color: #fff;
       display: flex;
@@ -19,7 +19,7 @@
     .soundbox {
       background: rgba(255, 255, 255, 0.1);
       padding: 30px;
-      border-radius: 16px;
+      border-radius: 18px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -28,15 +28,26 @@
 
     .icons {
       display: flex;
+      flex-wrap: wrap; /* allows multiple rows */
       gap: 35px;
       font-size: 32px;
       cursor: pointer;
+      justify-content: center;
     }
 
     .icon {
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: 0.3s;
+      width: 80px;
+    }
+
+    .icon img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 12px;
       transition: 0.3s;
     }
 
@@ -45,8 +56,8 @@
       font-size: 13px;
     }
 
-    .icon.active {
-      text-shadow: 0 0 10px #fff, 0 0 20px #ffcccc;
+    .icon.active img {
+      box-shadow: 0 0 15px #fff, 0 0 25px #ffcccc;
       transform: scale(1.1);
     }
 
@@ -55,6 +66,8 @@
       padding: 8px 20px;
       border: none;
       border-radius: 8px;
+      font-family: serif;
+      font-size: 13px;
       background: #fff;
       color: #4B0002;
       font-weight: bold;
@@ -74,10 +87,34 @@
 <body>
   <div class="soundbox">
     <div class="icons">
-      <div class="icon" onclick="toggleSound('rain', this)">🌧<span>Pitter Patter</span></div>
-      <div class="icon" onclick="toggleSound('thunder', this)">⚡<span>Rumble</span></div>
-      <div class="icon" onclick="toggleSound('coffee', this)">☕<span>Brew Time</span></div>
-      <div class="icon" onclick="toggleSound('birds', this)">🐦<span>Chirpy</span></div>
+      <div class="icon" onclick="toggleSound('rain', this)">
+        <img src="images/rain.png" alt="Rain">
+        <span>Pitter Patter</span>
+      </div>
+      <div class="icon" onclick="toggleSound('thunder', this)">
+        <img src="images/thunder.png" alt="Thunder">
+        <span>Rumble</span>
+      </div>
+      <div class="icon" onclick="toggleSound('coffee', this)">
+        <img src="images/coffee.png" alt="Coffee">
+        <span>Brew Time</span>
+      </div>
+      <div class="icon" onclick="toggleSound('birds', this)">
+        <img src="images/birds.png" alt="Birds">
+        <span>Chirpy</span>
+      </div>
+      <div class="icon" onclick="toggleSound('river', this)">
+        <img src="images/river.png" alt="River">
+        <span>Flow</span>
+      </div>
+      <div class="icon" onclick="toggleSound('ocean', this)">
+        <img src="images/ocean.png" alt="Ocean">
+        <span>Waves</span>
+      </div>
+      <div class="icon" onclick="toggleSound('wind', this)">
+        <img src="images/wind.png" alt="Wind">
+        <span>Whispers</span>
+      </div>
     </div>
 
     <button onclick="stopAll()">shh</button>
@@ -86,6 +123,9 @@
     <audio id="thunder" src="sounds/thunder.mp3" loop></audio>
     <audio id="coffee" src="sounds/coffee.mp3" loop></audio>
     <audio id="birds" src="audio/birds.mp3" loop></audio>
+    <audio id="river" src="sounds/river.mp3" loop></audio>
+    <audio id="ocean" src="sounds/ocean.mp3" loop></audio>
+    <audio id="wind" src="sounds/wind.mp3" loop></audio>
   </div>
 
   <script>
