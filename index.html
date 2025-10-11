@@ -1,59 +1,169 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ASMR Soundbox</title>
+  <title>listen</title>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #1e1e2f;
-      color: #fff;
+body {
+  font-family: serif;
+  font-size: 12px;
+  /* Replace solid color with image */
+  background: url("images/bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.soundbox {
+  background: rgba(255, 255, 255, 0.08); /* lighter transparency for glass look */
+  padding: 30px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+
+  /* ✨ Frosted glass effect */
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%); /* Safari support */
+
+  /* Subtle border for glass edge */
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  /* Soft shadow for depth */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+
+    .icons {
+      display: flex;
+      flex-wrap: wrap; /* allows multiple rows */
+      gap: 35px;
+      font-size: 32px;
+      cursor: pointer;
+      justify-content: center;
+    }
+
+    .icon {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      transition: 0.3s;
+      width: 80px;
     }
-    .soundbox {
-      display: grid;
-      grid-template-columns: repeat(2, 150px);
-      gap: 20px;
+
+    .icon img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 10px;
+      transition: 0.3s;
     }
+
+    .icon span {
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .icon.active img {
+      box-shadow: 0 0 15px #fff, 0 0 25px #ffcccc;
+      transform: scale(1.1);
+    }
+
     button {
-      background: #2e2e4f;
+      margin-top: 10px;
+      padding: 8px 20px;
       border: none;
-      border-radius: 12px;
-      padding: 20px;
-      color: #fff;
-      font-size: 16px;
+      border-radius: 8px;
+      font-family: serif;
+      font-size: 13px;
+      background: #fff;
+      color: #4B0002;
+      font-weight: bold;
       cursor: pointer;
       transition: 0.3s;
     }
+
     button:hover {
-      background: #44446a;
+      background: #ffcccc;
+    }
+
+    audio {
+      display: none; /* keep audio elements hidden */
     }
   </style>
 </head>
 <body>
-  <h1>🌙 ASMR Soundbox</h1>
   <div class="soundbox">
-    <button onclick="playSound('rain')">🌧 Rain</button>
-    <button onclick="playSound('thunder')">⚡ Thunder</button>
-    <button onclick="playSound('coffee')">☕ Coffee</button>
-    <button onclick="playSound('birds')">🐦 Birds</button>
+    <div class="icons">
+      <div class="icon" onclick="toggleSound('rain', this)">
+        <img src="images/rain.png" alt="Rain">
+        <span>Pitter Patter</span>
+      </div>
+      <div class="icon" onclick="toggleSound('thunder', this)">
+        <img src="images/thunder.png" alt="Thunder">
+        <span>Rumble</span>
+      </div>
+      <div class="icon" onclick="toggleSound('coffee', this)">
+        <img src="images/coffee.png" alt="Coffee">
+        <span>Brew Time</span>
+      </div>
+      <div class="icon" onclick="toggleSound('birds', this)">
+        <img src="images/birds.png" alt="Birds">
+        <span>Chirpy</span>
+      </div>
+      <div class="icon" onclick="toggleSound('river', this)">
+        <img src="images/river.png" alt="River">
+        <span>Flow</span>
+      </div>
+      <div class="icon" onclick="toggleSound('ocean', this)">
+        <img src="images/ocean.png" alt="Ocean">
+        <span>Waves</span>
+      </div>
+      <div class="icon" onclick="toggleSound('wind', this)">
+        <img src="images/wind.png" alt="Wind">
+        <span>Whispers</span>
+      </div>
+    </div>
+
+    <button onclick="stopAll()">shh</button>
+
+    <audio id="rain" src="audio/rain.mp3" loop></audio>
+    <audio id="thunder" src="audio/thunder.mp3" loop></audio>
+    <audio id="coffee" src="audio/coffee.mp3" loop></audio>
+    <audio id="birds" src="audio/birds.mp3" loop></audio>
+    <audio id="river" src="audio/river.mp3" loop></audio>
+    <audio id="ocean" src="audio/ocean.mp3" loop></audio>
+    <audio id="wind" src="audio/wind.mp3" loop></audio>
   </div>
 
-  <audio id="rain" src="sounds/rain.mp3"></audio>
-  <audio id="thunder" src="sounds/thunder.mp3"></audio>
-  <audio id="coffee" src="sounds/coffee.mp3"></audio>
-  <audio id="birds" src="sounds/birds.mp3"></audio>
-
   <script>
-    function playSound(id) {
+    function toggleSound(id, el) {
       const audio = document.getElementById(id);
-      audio.currentTime = 0;
-      audio.play();
+
+      if (audio.paused) {
+        audio.play();
+        el.classList.add('active');
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+        el.classList.remove('active');
+      }
+    }
+
+    function stopAll() {
+      document.querySelectorAll('audio').forEach(a => {
+        a.pause();
+        a.currentTime = 0;
+      });
+      document.querySelectorAll('.icon').forEach(icon => {
+        icon.classList.remove('active');
+      });
     }
   </script>
 </body>
