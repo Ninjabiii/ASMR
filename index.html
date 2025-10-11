@@ -1,170 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>listen</title>
-  <style>
-body {
-  font-family: serif;
-  font-size: 12px;
-  /* Replace solid color with image */
-  background: url("images/bg.jpg") no-repeat center center fixed;
-  background-size: cover;
-
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
-}
-
-.soundbox {
-  background: rgba(255, 255, 255, 0.08); /* lighter transparency for glass look */
-  padding: 30px;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
-
-  /* ✨ Frosted glass effect */
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%); /* Safari support */
-
-  /* Subtle border for glass edge */
-  border: 1px solid rgba(255, 255, 255, 0.25);
-
-  /* Soft shadow for depth */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-
-    .icons {
-      display: flex;
-      flex-wrap: wrap; /* allows multiple rows */
-      gap: 35px;
-      font-size: 32px;
-      cursor: pointer;
-      justify-content: center;
-    }
-
-    .icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: 0.3s;
-      width: 80px;
-    }
-
-    .icon img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 10px;
-      transition: 0.3s;
-    }
-
-    .icon span {
-      margin-top: 6px;
-      font-size: 13px;
-    }
-
-    .icon.active img {
-      box-shadow: 0 0 15px #fff, 0 0 25px #ffcccc;
-      transform: scale(1.1);
-    }
-
-    button {
-      margin-top: 10px;
-      padding: 8px 20px;
-      border: none;
-      border-radius: 8px;
-      font-family: serif;
-      font-size: 13px;
-      background: #fff;
-      color: #4B0002;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background: #ffcccc;
-    }
-
-    audio {
-      display: none; /* keep audio elements hidden */
-    }
-  </style>
-</head>
-<body>
-  <div class="soundbox">
-    <div class="icons">
-      <div class="icon" onclick="toggleSound('rain', this)">
-        <img src="images/rain.png" alt="Rain">
-        <span>Pitter Patter</span>
-      </div>
-      <div class="icon" onclick="toggleSound('thunder', this)">
-        <img src="images/thunder.png" alt="Thunder">
-        <span>Rumble</span>
-      </div>
-      <div class="icon" onclick="toggleSound('coffee', this)">
-        <img src="images/coffee.png" alt="Coffee">
-        <span>Brew Time</span>
-      </div>
-      <div class="icon" onclick="toggleSound('birds', this)">
-        <img src="images/birds.png" alt="Birds">
-        <span>Chirpy</span>
-      </div>
-      <div class="icon" onclick="toggleSound('river', this)">
-        <img src="images/river.png" alt="River">
-        <span>Flow</span>
-      </div>
-      <div class="icon" onclick="toggleSound('ocean', this)">
-        <img src="images/ocean.png" alt="Ocean">
-        <span>Waves</span>
-      </div>
-      <div class="icon" onclick="toggleSound('wind', this)">
-        <img src="images/wind.png" alt="Wind">
-        <span>Whispers</span>
-      </div>
-    </div>
-
-    <button onclick="stopAll()">shh</button>
-
-    <audio id="rain" src="audio/rain.mp3" loop></audio>
-    <audio id="thunder" src="audio/thunder.mp3" loop></audio>
-    <audio id="coffee" src="audio/coffee.mp3" loop></audio>
-    <audio id="birds" src="audio/birds.mp3" loop></audio>
-    <audio id="river" src="audio/river.mp3" loop></audio>
-    <audio id="ocean" src="audio/ocean.mp3" loop></audio>
-    <audio id="wind" src="audio/wind.mp3" loop></audio>
-  </div>
-
-  <script>
-    function toggleSound(id, el) {
-      const audio = document.getElementById(id);
-
-      if (audio.paused) {
-        audio.play();
-        el.classList.add('active');
+<script>
+  function fadeIn(audio, el) {
+    audio.volume = 0;
+    audio.play();
+    el.classList.add('active');
+    let vol = 0;
+    const fade = setInterval(() => {
+      if (vol < 1) {
+        vol += 0.05; // speed of fade-in
+        audio.volume = Math.min(vol, 1);
       } else {
+        clearInterval(fade);
+      }
+    }, 100); // every 100ms
+  }
+
+  function fadeOut(audio, el) {
+    let vol = audio.volume;
+    const fade = setInterval(() => {
+      if (vol > 0) {
+        vol -= 0.05; // speed of fade-out
+        audio.volume = Math.max(vol, 0);
+      } else {
+        clearInterval(fade);
         audio.pause();
         audio.currentTime = 0;
         el.classList.remove('active');
       }
-    }
+    }, 100);
+  }
 
-    function stopAll() {
-      document.querySelectorAll('audio').forEach(a => {
-        a.pause();
-        a.currentTime = 0;
-      });
-      document.querySelectorAll('.icon').forEach(icon => {
-        icon.classList.remove('active');
-      });
+  function toggleSound(id, el) {
+    const audio = document.getElementById(id);
+
+    if (audio.paused) {
+      fadeIn(audio, el);
+    } else {
+      fadeOut(audio, el);
     }
-  </script>
-</body>
-</html>
+  }
+
+  function stopAll() {
+    document.querySelectorAll('audio').forEach((a, i) => {
+      const icon = document.querySelectorAll('.icon')[i];
+      fadeOut(a, icon);
+    });
+  }
+</script>
