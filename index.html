@@ -129,6 +129,9 @@ body {
         <img src="images/wind.png" alt="Wind">
         <span>Whispers</span>
       </div>
+      <div class="icon" onclick="toggleSound('her voice'), this">
+        <img src="images/hervoice.png" alt="Her voice">
+        <span>Her voice</span>
     </div>
 
     <button onclick="stopAll()">shh</button>
@@ -140,6 +143,7 @@ body {
     <audio id="river" src="audio/river.mp3" loop></audio>
     <audio id="ocean" src="audio/ocean.mp3" loop></audio>
     <audio id="wind" src="audio/wind.mp3" loop></audio>
+    <audio id="her voice" src="audio/her voice.mp3" loop></audio>
   </div>
 <script>
   function fadeIn(audio, el) {
@@ -189,10 +193,5 @@ body {
     });
   }
 </script>
-
-
-
-
-  
 </body>
 </html>
