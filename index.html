@@ -27,7 +27,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  max-width: 800px; /* or whatever feels right */
+  max-width: 700px; /* or whatever feels right */
 
 
   /* ✨ Frosted glass effect */
@@ -113,7 +113,7 @@ body {
       </div>
       <div class="icon" onclick="toggleSound('coffee', this)">
         <img src="images/coffee.png" alt="Coffee">
-        <span>Golden Breath</span>
+        <span>Breath</span>
       </div>
       <div class="icon" onclick="toggleSound('birds', this)">
         <img src="images/birds.png" alt="Birds">
@@ -132,7 +132,7 @@ body {
         <span>Whispers</span>
       </div>
       <div class="icon" onclick="toggleSound('her voice', this)">
-        <img src="images/hervoice.png" alt="Her voice">
+        <img src="images/hervoice.png" alt="her voice">
         <span>Her voice</span>
     </div>
 
@@ -147,6 +147,7 @@ body {
     <audio id="wind" src="audio/wind.mp3" loop></audio>
     <audio id="her voice" src="audio/her voice.mp3" loop></audio>
   </div>
+    
 <script>
   function fadeIn(audio, el) {
     audio.volume = 0;
@@ -195,5 +196,82 @@ body {
     });
   }
 </script>
+    
+    <script>
+  // Create a single AudioContext for all sounds
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const buffers = {}; // store decoded audio buffers
+  const sources = {}; // store currently playing sources
+
+  // Load and decode audio files
+  async function loadSound(id, url) {
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    buffers[id] = await audioCtx.decodeAudioData(arrayBuffer);
+  }
+
+  // Play a sound with seamless looping
+  function playSound(id, el) {
+    if (sources[id]) return; // already playing
+
+    const source = audioCtx.createBufferSource();
+    source.buffer = buffers[id];
+    source.loop = true;
+
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = 0; // start silent for fade-in
+
+    source.connect(gainNode).connect(audioCtx.destination);
+    source.start(0);
+
+    sources[id] = { source, gainNode };
+
+    // Fade in
+    gainNode.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 2);
+    el.classList.add('active');
+  }
+
+  // Stop a sound with fade-out
+  function stopSound(id, el) {
+    if (!sources[id]) return;
+
+    const { source, gainNode } = sources[id];
+    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2);
+
+    setTimeout(() => {
+      source.stop();
+      delete sources[id];
+      el.classList.remove('active');
+    }, 2000); // matches fade duration
+  }
+
+  function toggleSound(id, el) {
+    if (sources[id]) {
+      stopSound(id, el);
+    } else {
+      playSound(id, el);
+    }
+  }
+
+  function stopAll() {
+    Object.keys(sources).forEach(id => {
+      const icon = document.querySelector(`.icon[onclick*="${id}"]`);
+      stopSound(id, icon);
+    });
+  }
+
+  // Preload all sounds on page load
+  window.addEventListener('load', () => {
+    loadSound('rain', 'audio/rain.mp3');
+    loadSound('thunder', 'audio/thunder.mp3');
+    loadSound('coffee', 'audio/coffee.mp3');
+    loadSound('birds', 'audio/birds.mp3');
+    loadSound('river', 'audio/river.mp3');
+    loadSound('ocean', 'audio/ocean.mp3');
+    loadSound('wind', 'audio/wind.mp3');
+    loadSound('her voice', 'audio/her voice.mp3');
+  });
+</script>
+
 </body>
 </html>
